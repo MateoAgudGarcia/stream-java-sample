@@ -3,12 +3,36 @@
  */
 package stream.java.sample;
 
+import stream.java.data.ArraySample;
+import stream.java.objects.ObjectListSample;
+import stream.java.objects.ObjectSample;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class App {
-    public String getGreeting() {
-        return "Hello World!";
+
+    private static List<ObjectSample> objectSamples(ObjectListSample objectListSample){
+        List<ObjectSample> objectSampleList = new ArrayList<ObjectSample>();
+        List<String> stringList = objectListSample.getLetter();
+        List<Integer> integerList = objectListSample.getNumber();
+        for (int i = 0; i < stringList.toArray().length; i++) {
+            objectSampleList.add(i,new ObjectSample(stringList.get(i),integerList.get(i)));
+        }
+        return objectSampleList;
     }
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        ArraySample arraySample = new ArraySample();
+        List<String> letters = arraySample.tenSamplesStringList();
+        List<Integer> numbers = arraySample.tenSamplesIntegerList();
+
+        ObjectListSample objectListSample = new ObjectListSample(letters,numbers);
+
+        String a = objectListSample.getLetter().stream().filter(x->x=="a").findFirst().map(Object::toString).orElse(null);
+        System.out.println(a);
+
+        Integer b = objectSamples(objectListSample).stream().map(ObjectSample::getNumber).filter(x->x==11).findFirst().orElse(404);
+        System.out.println(b);
     }
 }
